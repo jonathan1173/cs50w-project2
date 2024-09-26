@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>Active Listings</h2>
+
+<form action="{% url 'filterCategory' %}" method="POST">
+    {% csrf_token %}
+    <h4>Esta en la categoria: {{ elementCat }}</h4>
+    
+        <label for="categoryIndex">Category</label>
+        <select onchange="this.form.submit()" name="categoryIndex" id="categoryIndex">
+           <option value="{{ elementCat }}">{{ elementCat }}</option>
+            {% for cat in category %}
+            {% if elementCat|lower != cat|lower %}
+                  <option value="{{ cat }}">{{ cat }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    <!-- <input  type="submit" value="Enviar"> -->
+     <button class="btn-primary" type="submit" value="none" name="categoryIndex">reset</button>
+
+</form>
+
+<div class="row m-3 ">
+    {% for list in activateList %}
+
+    <div class="card m-3 border-dark" style="width: 18rem;">
+        <img src="{{ list.url }}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ list.title }}</h5>
+            <p class="card-text">{{list.description}}</p>
+            <a href="{% url 'listing' id=list.id %}" class="btn btn-primary">Detalles</a>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

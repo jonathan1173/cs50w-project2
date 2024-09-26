@@ -1,0 +1,117 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="">
+    <div class="container">
+        {% if message %}
+        {% if update %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% if not dataList.activate and user == dataList.price.user %}
+    <div class="alert alert-success" role="alert">
+        Felicidades Ganaste La Subasta!!
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-around  flex-row   ">
+
+        <!-- detalles sobre el articulo -->
+
+        <div>
+
+            <h2>{{ dataList.title }}</h2>
+            <h4>${{ dataList.price.bid_amount }} </h4>
+
+            <p>{{ dataList.description }}</p>
+            <h5>Dueno: {{ dataList.key.username }}</h5>
+
+            <!-- anadir al carrito  -->
+            {% if user.is_authenticated and dataList.activate %}
+            {% if esDueno %}
+            <form action="{% url 'close' id=dataList.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Close</button>
+            </form>
+            {% endif %}
+
+            {% if isListWatch %}
+            <form action="{% url 'removeList' id=dataList.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove</button>
+            </form>
+
+            {% else %}
+            <form action="{% url 'addList' id=dataList.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Add</button>
+            </form>
+            {% endif %}
+            {% endif %}
+
+            <div>
+                {% if user.is_authenticated %}
+                <form action="{% url 'addBid' id=dataList.id %}" method="POST">
+
+                    <div class="">
+                        {% csrf_token %}
+                        <label for="Price" class="form-label"><strong>Add Bid</strong></label>
+                        <input type="number" min="0" name="newBid" placeholder="Add New Bid">
+                        <button type="submit" class="btn btn-primary">oferta</button>
+                    </div>
+
+                </form>
+                {% endif %}
+                <p>{{ mensaje }}</p>
+            </div>
+
+        </div>
+        <!-- imagen sobre el articulo -->
+        <div class="p-3 mb-1 bg-dark text-white "
+            style="height: 400px ; border-radius: 25px ; justify-content: center; align-items: center; display: flex; ">
+            <img style="height: 350px; width: 350px;" src="{{ dataList.url}}">
+        </div>
+
+    </div>
+
+    <hr style="border:  solid #444 1px;">
+
+    <div class="">
+        <h2>Comentarios</h2>
+        {% if user.is_authenticated %}
+        <form action="{% url 'addComment' id=dataList.id %}" method="POST">
+
+            <div class="">
+                {% csrf_token %}
+                <label for="Price" class="form-label"><strong>Add Comment</strong></label>
+                <input type="text" name="newComment" placeholder="Add New Comment">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+
+        </form>
+        {% endif %}
+    </div>
+
+    <ul class="">
+        <hr>
+        {% for comment in allComments %}
+        <li>{{comment.comentario}}</li>
+        <p>posted by <strong>{{comment.user }}</strong></p>
+        <hr>
+        {% endfor %}
+
+    </ul>
+
+</div>
+<style></style>
+
+
+{% endblock %}
