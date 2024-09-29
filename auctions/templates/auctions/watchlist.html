@@ -1,21 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>Watchlist</h2>
+<div class="container-fluid px-4">
+  <h2 class="my-4">Watchlist</h2>
 
-<div class="row m-3 ">
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     {% for list in list %}
-
-    <div class="card m-3 border-dark" style="width: 18rem;">
-        <img src="{{ list.url }}" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">{{ list.title }}</h5>
-            <p class="card-text">{{list.Description}}</p>
-            <a href="{% url 'listing' id=list.id %}" class="btn btn-primary">Detalles</a>
+    <div class="col">
+      <div class="card h-100">
+        <img src="{{ list.url }}" class="card-img-top" alt="{{ list.title }}" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ list.title }}</h5>
+          <p class="card-text flex-grow-1">{{ list.Description }}</p>
+          <a href="{% url 'listing' id=list.id %}" class="btn btn-primary mt-auto">Detalles</a>
         </div>
+      </div>
     </div>
-
     {% endfor %}
+  </div>
 </div>
-
 {% endblock %}
